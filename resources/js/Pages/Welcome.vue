@@ -1,5 +1,13 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head,useForm } from "@inertiajs/vue3";
+import { ref } from 'vue';
+
+
+
+let today = new Date();
+let formattedMonth = String(today.getMonth() + 1).padStart(2, '0');
+let formattedDay = String(today.getDate()).padStart(2, '0');
+let startDate = ref(`${today.getFullYear()}-${formattedMonth}-${formattedDay}`);
 
 
 
@@ -12,6 +20,18 @@ defineProps({
 });
 
 
+const form=useForm({
+    address:'',
+    start_date:'',
+    end_date:'',
+    categories:'',
+})
+
+const callApi = () => {
+
+}
+
+
 </script>
 
 <template>
@@ -20,6 +40,7 @@ defineProps({
     </Head>
 
     <section class="py-20 bg-white tails-selected-element">
+     
         <div class="max-w-6xl px-10 mx-auto xl:px-5">
             <div class="flex flex-col justify-center space-y-7">
                 <h2
@@ -33,8 +54,8 @@ defineProps({
                     خطط لرحلتك في ثوانٍ معدودة
                 </p>
 
-                <form action="{{ route('search') }}" method="post">
-                    @csrf
+                <form  v-on:submit.prevent="callApi">
+                   
                     <div
                         class="flex flex-col w-full mx-auto space-y-5 md:space-y-0 md:space-x-5 md:flex-row"
                     >
@@ -47,12 +68,13 @@ defineProps({
                             data-rounded="rounded-lg"
                             placeholder="بغداد, الرياض, دبي ..."
                             required
+                            v-model="form.address"
                         />
 
                         <input
                             type="date"
                             name="start_date"
-                            value="{{date('Y-m-d')}}"
+                            v-model="startDate"
                             class="flex-1 w-full px-5 py-5 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-2xl border border-gray-300 rounded-lg focus:ring-4 focus:border-red-700 focus:ring-red-600 focus:ring-opacity-50 focus:outline-none bg-gray-100"
                             placeholder="Start Date"
                             required
